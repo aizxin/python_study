@@ -15,6 +15,7 @@
             </header>
             <div class="beg-login-main layui-form">
                 <form class="layui-form">
+                     {{ form.csrf_token }}
                     <div class="layui-form-item">
                         <label class="beg-login-icon">
                             <i class="layui-icon"></i>
@@ -23,15 +24,15 @@
                     </div>
                     <div class="layui-form-item">
                         <label class="beg-login-icon">
-                        <i class="layui-icon"></i>
-                    </label>
-                        <input type="password" name="password" lay-verify="required|password" autocomplete="off" placeholder="管理员密码" class="layui-input">
+                            <i class="layui-icon"></i>
+                        </label>
+                        <input type="password" name="password" autocomplete="off" placeholder="管理员密码" class="layui-input">
                     </div>
                     <div class="layui-form-item">
                         <div class="">
                             <button class="layui-input layui-btn layui-btn-primary" lay-submit="" lay-filter="login" style="color:#fff">
-                            登&nbsp;&nbsp;&nbsp;&nbsp;录
-                        </button>
+                                登&nbsp;&nbsp;&nbsp;&nbsp;录
+                            </button>
                         </div>
                         <div class="beg-clear"></div>
                     </div>
@@ -44,19 +45,33 @@
     </body>
     <script src="/static/plugin/layui/layui.js" charset="utf-8"></script>
     <script>
-        layui.use(['form'], function() {
-            var form = layui.form,
-                $ = layui.jquery,
-                layer = layui.layer;
-            //自定义验证规则
-            form.verify({
-                password: [/(.+){6,12}$/, '密码必须6到12位']
+    layui.use(['form'], function() {
+        var form = layui.form,
+            $ = layui.jquery,
+            layer = layui.layer;
+        //自定义验证规则
+        // form.verify({
+        //     password: [/(.+){6,12}$/, '密码必须6到12位']
+        // });
+        //监听提交
+        form.on('submit(login)', function(data) {
+            $.ajax({
+                type: 'POST',
+                url: "{{ url_for('admin.login') }}",
+                data: data.field,
+                dataType: 'json',
+                success: function(data) {
+                    // layer.close(index);
+                    console.log(data)
+                },
+                error: function(xhr) {
+                    layer.msg('error');
+                }
             });
-            //监听提交
-            form.on('submit(login)', function(data) {
-                return false;
-            });
+
+            return false;
         });
+    });
     </script>
 
 </html>
