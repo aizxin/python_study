@@ -16,11 +16,9 @@ class LoginForm(FlaskForm):
             DataRequired("请输入密码！")
         ]
     )
-    def validate_account(self, field):
-        account = field.data
-        admin = Admin.query.filter_by(name=account).count()
+    def validate_username(self, field):
+        username = field.data
+        admin = Admin.query.filter_by(name=username).count()
         if admin == 0:
             raise ValidationError("账号不存在！")
-    def errors_first(self):
-        return self.errors
 

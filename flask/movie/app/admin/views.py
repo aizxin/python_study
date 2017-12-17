@@ -1,10 +1,10 @@
 #coding:utf8
 
-from flask import render_template, jsonify, request
+from flask import render_template, jsonify, request,session
 from . import admin
-from app.models import User,Tag
+from app.models import Admin,Tag,Adminlog
 from app.admin.forms import LoginForm
-import json
+from app import db
 
 def errors_first(errors):
     k = ''
@@ -27,9 +27,22 @@ def login():
     form = LoginForm()
     if request.method == "POST":
         if form.validate_on_submit():
-            return jsonify({ 'success': True,
-                'message': 'form.message'})
+            data = form.data
+            admin = Admin.query.filter_by(name=data["username"]).first()
+            if not admin.check_pwd(data["password"]):
+                return jsonify({ 'code': False,
+                'message': "账号密码错误！"})
+            session["admin"] = data["username"]
+            session["admin_id"] = admin.id
+            adminlog = Adminlog(
+                admin_id=admin.id,
+                ip=request.remote_addr,
+            )
+            db.session.add(adminlog)
+            db.session.commit()
+            return jsonify({ 'code': True,
+                'message': "登录成功！"})
         else:
-            return jsonify({'success': False,
+            return jsonify({'code': False,
                         'message': errors_first(form.errors) })
     return render_template("admin/login.html",form=form)

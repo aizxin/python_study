@@ -1,6 +1,6 @@
 // 配置
 layui.config({
-	base: "/back/js/"
+	base: "/static/admin/js/"
 }).extend({
 	modal: 'module/modal',
 	global: 'module/global',
