@@ -46,38 +46,38 @@
     <script src="/static/plugin/layui/layui.js" charset="utf-8"></script>
     <script src="/static/admin/js/config.js" charset="utf-8"></script>
     <script>
-    layui.use(['form', 'aizxin'], function() {
-        var form = layui.form,
-            $ = layui.jquery,
-            aizxin = layui.aizxin;
-        layer = layui.layer;
-        //自定义验证规则
-        form.verify({
-            password: [/(.+){6,12}$/, '密码必须6到12位']
-        });
-        //监听提交
-        form.on('submit(login)', function(data) {
-            $.ajax({
-                type: 'POST',
-                url: "{{ url_for('admin.login') }}",
-                data: data.field,
-                dataType: 'json',
-                success: function(data) {
-                    if (data.code) {
-                        aizxin.msgS(6,data.message, function() {
-                            window.location.href = "/admin"
-                        })
-                    } else {
-                        aizxin.msgE(2,data.message)
-                    }
-                },
-                error: function(xhr) {
-                    aizxin.msgE(2,"系统错误！")
-                }
+        layui.use(['form', 'aizxin'], function() {
+            var form = layui.form,
+                $ = layui.jquery,
+                aizxin = layui.aizxin;
+            layer = layui.layer;
+            //自定义验证规则
+            form.verify({
+                password: [/(.+){6,12}$/, '密码必须6到12位']
             });
-            return false;
+            //监听提交
+            form.on('submit(login)', function(data) {
+                $.ajax({
+                    type: 'POST',
+                    url: "{{ url_for('admin.login') }}",
+                    data: data.field,
+                    dataType: 'json',
+                    success: function(data) {
+                        if (data.code) {
+                            aizxin.msgS(6, data.message, function() {
+                                window.location.href = "/admin"
+                            })
+                        } else {
+                            aizxin.msgE(2, data.message)
+                        }
+                    },
+                    error: function(xhr) {
+                        aizxin.msgE(2, "系统错误！")
+                    }
+                });
+                return false;
+            });
         });
-    });
     </script>
 
 </html>
